@@ -118,7 +118,6 @@ class Test_Job_Without_Perform_Method
 class Test_Job_With_SetUp
 {
 	public static $called = false;
-	public $args = false;
 
 	public function setUp()
 	{
@@ -135,7 +134,6 @@ class Test_Job_With_SetUp
 class Test_Job_With_TearDown
 {
 	public static $called = false;
-	public $args = false;
 
 	public function perform()
 	{

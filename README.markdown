@@ -56,8 +56,20 @@ Jobs are queued as follows:
 
 Each job should be in it's own class, and include a `perform` method.
 
+When the job is run, the class will be instantiated and any arguments will
+be passed in to the constructor defined by your job's class. If your job
+is expecting args, it's recommended that you store these args in a
+protected member of your choice.
+
 	class My_Job
 	{
+		protected $args;
+
+		public function __construct ($args)
+		{
+			$this->args = $args;
+		}
+
 		public function perform()
 		{
 			// Work work work
@@ -65,9 +77,8 @@ Each job should be in it's own class, and include a `perform` method.
 		}
 	}
 
-When the job is run, the class will be instantiated and any arguments
-will be set as an array on the instantiated object, and are accessible
-via `$this->args`.
+If arguments are not supplied when the job is queued, null will be passed
+in to the constructor.
 
 Any exception thrown by a job will result in the job failing - be
 careful here and make sure you handle the exceptions that shouldn't
@@ -79,21 +90,32 @@ The `tearDown` method if defined, will be called after the job finishes.
 
 	class My_Job
 	{
+		protected $args;
+
+		public function __construct ($args)
+		{
+			$this->args = $args;
+		}
+
 		public function setUp()
 		{
 			// ... Set up environment for this job
 		}
-		
+
 		public function perform()
 		{
 			// .. Run job
 		}
-		
+
 		public function tearDown()
 		{
 			// ... Remove environment for this job
 		}
 	}
+
+The setUp and tearDown methods can also be used to create libraries of
+related jobs through class inheritance where all jobs extending from a
+base job class contain the same or similar setUp and tearDown methods.
 
 ### Tracking Job Statuses ###
 
